@@ -1,3 +1,5 @@
+let gates = {};
+
 class Platform extends Entity {
 
     constructor(x, y, width, height) {
@@ -25,21 +27,25 @@ class Button extends Platform {
     }
 
     update() {
-        
+        if (this.collidedWith(player)) {
+            gates[this.gateIdToDeactivate] = false;
+        }
     }
 
     render() {
-
+        ctx.fillStyle = "black"
+        ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 }
 
 class Gate extends Platform {
     
-    id;
+    gateId;
 
-    constructor(x, y, width, height, id) {
+    constructor(x, y, width, height, gateId) {
         super(x, y, width, height);
-        this.id = id;
+        this.gateId = gateId;
+        gates[this.gateId] = true;
         this.setOriginalProperties();
     }
 
@@ -49,10 +55,12 @@ class Gate extends Platform {
     }
 
     update() {
-
+        if (!gates[this.gateId]) {
+            this.deactivate();
+        }
     }
     render() {
-        ctx.fillStyle = "rgb(60, 60, 60)"
+        ctx.fillStyle = "rgb(30, 30, 30)";
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 }
@@ -113,7 +121,21 @@ const makeLevel = () => {
         console.log(levelData[sceneName]);
         let entitiesToAdd = [];
         levelData[sceneName]["platforms"].forEach(platform => {
-            entitiesToAdd.push(new Platform(platform[0], platform[1], platform[2], platform[3]));
+            if (typeof(platform[0]) == "string") {
+                switch (platform[0]) {
+                    case "button":
+                        entitiesToAdd.push(new Button(platform[1], platform[2], platform[3], platform[4], platform[5]))
+                        break;
+                    case "gate":
+                        entitiesToAdd.push(new Gate(platform[1], platform[2], platform[3], platform[4], platform[5]));
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                entitiesToAdd.push(new Platform(platform[0], platform[1], platform[2], platform[3]));
+            }
+            
         });
         levelData[sceneName]["enemies"].forEach(enemy => {
             switch (enemy[0]) {

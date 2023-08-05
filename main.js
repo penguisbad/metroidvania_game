@@ -24,7 +24,7 @@ document.onkeyup = (event) => {
     keyMap[event.key] = false;
 }
 
-//player = new Player(30, 700, 100);
+//player = new Player(1100, 700, 100);
 player = new Player(30, 50, 100);
 entities.push(player);
 

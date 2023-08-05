@@ -27,8 +27,7 @@ class Enemy extends Entity {
 
     render() {
 
-        ctx.fillStyle = "black";
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        
     }
 }
 
@@ -68,6 +67,21 @@ class BasicEnemy extends Enemy {
         this.checkPlayerCollision();
         this.gravity();
         this.idle();
+    }
+
+    render() {
+
+        ctx.fillStyle = "black";
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+
+        ctx.fillStyle = "white";
+        if (this.direction == "right") {
+            ctx.fillRect(this.x + this.width - 5, this.y + 10, 3, 3);
+            ctx.fillRect(this.x + this.width - 12, this.y + 10, 3, 3);
+        } else {
+            ctx.fillRect(this.x + 2, this.y + 10, 3, 3);
+            ctx.fillRect(this.x + 9, this.y + 10, 3, 3);
+        }
     }
 }
 class ChargingEnemy extends BasicEnemy {

@@ -164,3 +164,27 @@ class Entity {
         entities = entities.filter(entity => !(JSON.stringify(entity) == JSON.stringify(this)));
     }
 }
+
+class Particles extends Entity {
+
+    direction;
+    particleSpeed;
+    particleLife;
+    
+
+    constructor(x, y, direction, amount, particleSpeed, particleLife) {
+        super(x, y, 0, 0);
+        this.direction = direction;
+        this.particleSpeed = particleSpeed;
+        this.particleLife = particleLife;
+
+        this.setOriginalProperties();
+    }
+
+    update() {
+
+    }
+    render() {
+
+    }
+}
