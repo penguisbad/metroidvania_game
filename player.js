@@ -2,11 +2,13 @@ class Projectile extends Entity {
 
     direction;
     frameCreated;
+    damage;
 
-    constructor(x, y, direction) {
+    constructor(x, y, direction, damage) {
         super(x, y, 7, 7);
         this.direction = direction;
         this.frameCreated = frameCount;
+        this.damage = damage;
     }
     update() {
         if (this.direction == "right") {
@@ -15,14 +17,15 @@ class Projectile extends Entity {
         if (this.direction == "left") {
             this.move(-15, 0);
         }
-        
+
         let collisionInformation = this.collidedWithAnything(true);
         if (collisionInformation[0] || frameCount > this.frameCreated + 100) {
             if (collisionInformation[1] instanceof Enemy) {
-                collisionInformation[1].takeDamage();
+                collisionInformation[1].takeDamage(this.damage);
             }
             this.destroy();
         }
+        
         
     }
     render() {
@@ -32,16 +35,29 @@ class Projectile extends Entity {
     }
 }
 
+class ChargedProjectile extends Projectile {
+    constructor(x, y, direction, damage) {
+        super(x, y, direction, damage);
+        this.width = 12;
+        this.height = 12;
+        entities.push(new Particles(this.width / 2, this.height / 2, this.direction == "right" ? "left": "right", 10, 2, 10, 10, 6, this));
+    }
+}
+
 class Player extends Entity {
 
     health;
     maxHealth;
 
     jumpVelocity = 0;
-    zKeyPressedPreviousFrame = false;
-    cKeyPressedPreviousFrame = false;
-    xKeyPressedPreviousFrame = false;
     directionFacing = "left";
+
+    keysPressedPreviousFrame = {
+        "z": false,
+        "c": false,
+        "x": false,
+        "a": false
+    };
 
     isDashing = false;
     dashFrameCount = 0;
@@ -50,10 +66,14 @@ class Player extends Entity {
     doubleJump = false;
     allowedToDoubleJump = false;
 
+    chargedShot = false;
+    chargingShot = false;
+    startChargingShotFrame;
+
     abilities = {
-        "dash": false,
-        "doubleJump": false,
-        "chargedShot": false,
+        "dash": true,
+        "doubleJump": true,
+        "chargedShot": true,
     }
 
     takenDamageFrame = 0;
@@ -106,10 +126,10 @@ class Player extends Entity {
         if (this.touchingGrond()) {
             this.allowedToDoubleJump = true;
         }
-        if (keyMap["z"] && !this.zKeyPressedPreviousFrame && (this.touchingGrond() || this.doubleJump)) {
+        if (keyMap["z"] && !this.keysPressedPreviousFrame["z"] && (this.touchingGrond() || this.doubleJump)) {
             this.startJumping();
         }
-        if (!keyMap["z"] && this.zKeyPressedPreviousFrame) {
+        if (!keyMap["z"] && this.keysPressedPreviousFrame["z"]) {
             this.stopJumping();
         }
 
@@ -118,8 +138,6 @@ class Player extends Entity {
         } else {
             this.gravity();
         }
-
-        this.zKeyPressedPreviousFrame = keyMap["z"];
     }
 
     dash() {
@@ -139,7 +157,7 @@ class Player extends Entity {
         }
 
         
-        if (keyMap["c"] && !this.cKeyPressedPreviousFrame && !this.isDashing && this.allowedToDash) {
+        if (keyMap["c"] && !this.keysPressedPreviousFrame["c"] && !this.isDashing && this.allowedToDash) {
             this.isDashing = true;
             this.allowedToDash = false;
             this.dashFrameCount = frameCount;
@@ -150,25 +168,52 @@ class Player extends Entity {
                 this.isDashing = false;
             }
         }
-        this.cKeyPressedPreviousFrame = keyMap["c"];
     }
 
     shoot() {
         if (this.directionFacing == "right") {
-            entities.push(new Projectile(this.x + this.width + 10, this.y + (this.height / 2), "right"));
+            entities.push(new Projectile(this.x + this.width + 10, this.y + (this.height / 2), "right", 1));
         }
         if (this.directionFacing == "left") {
-            entities.push(new Projectile(this.x - 10, this.y + (this.height / 2), "left"));
+            entities.push(new Projectile(this.x - 10, this.y + (this.height / 2), "left", 1));
         }
         
     }
 
     checkShoot() {
-        if (keyMap["x"] && !this.xKeyPressedPreviousFrame) {
+        if (keyMap["x"] && !this.keysPressedPreviousFrame["x"]) {
             this.shoot();
         }
+    }
 
-        this.xKeyPressedPreviousFrame = keyMap["x"];
+    checkChargedShot() {
+        if (!this.abilities["chargedShot"]) {
+            return;
+        }
+        if (keyMap["a"] && !this.keysPressedPreviousFrame["a"]) {
+            if (this.chargedShot) {
+                if (this.directionFacing == "right") {
+                    entities.push(new ChargedProjectile(this.x + this.width + 15, this.y + (this.height / 2) - 2, "right", 5));
+                }
+                if (this.directionFacing == "left") {
+                    entities.push(new ChargedProjectile(this.x - 15, this.y + (this.height / 2) - 2, "left", 5));
+                }
+                this.chargedShot = false;
+            } else {
+                this.startChargingShotFrame = frameCount;
+                this.chargingShot = true;
+            }
+            
+        }
+        let chargedShotReady = this.startChargingShotFrame + 50 < frameCount;
+        let aKeyReleased = !keyMap["a"] && this.keysPressedPreviousFrame["a"];
+        if (!this.chargedShot && aKeyReleased && chargedShotReady) {
+            this.chargedShot = true;
+            this.startChargingShotFrame = Number.MAX_SAFE_INTEGER;
+        }
+        if (aKeyReleased || chargedShotReady) {
+            this.chargingShot = false;
+        }
     }
 
     movement() {
@@ -222,11 +267,19 @@ class Player extends Entity {
         }
     }
 
+    updateKeysPressedPreviousFrame() {
+        Object.keys(this.keysPressedPreviousFrame).forEach(key => {
+            this.keysPressedPreviousFrame[key] = keyMap[key];
+        });
+    }
+
     update() {
         this.movement();
         this.checkJump();
         this.checkDash();
         this.checkShoot();
+        this.checkChargedShot();
+        this.updateKeysPressedPreviousFrame();
         this.heal();
         this.checkSceneTransition();
     }
@@ -241,19 +294,26 @@ class Player extends Entity {
         ctx.fillRect(350, 15, 2, 15);
     }
 
-    render() {
-        this.renderHUD();
-
+    renderPlayer(x, y, thisEntity) {
         ctx.fillStyle = "black";
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.fillRect(x, y, thisEntity.width, thisEntity.height);
 
         ctx.fillStyle = "white";
-        if (this.directionFacing == "right") {
-            ctx.fillRect(this.x + this.width - 5, this.y + 10, 3, 6);
-            ctx.fillRect(this.x + this.width - 12, this.y + 10, 3, 6);
+        if (thisEntity.directionFacing == "right") {
+            ctx.fillRect(x + thisEntity.width - 5, y + 10, 3, 6);
+            ctx.fillRect(x + thisEntity.width - 12, y + 10, 3, 6);
         } else {
-            ctx.fillRect(this.x + 2, this.y + 10, 3, 6);
-            ctx.fillRect(this.x + 9, this.y + 10, 3, 6);
+            ctx.fillRect(x + 2, y + 10, 3, 6);
+            ctx.fillRect(x + 9, y + 10, 3, 6);
+        }
+    }
+
+    render() {
+        this.renderHUD();
+        if (this.chargingShot) {
+            this.shakeEffect(2, this.renderPlayer);
+        } else {
+            this.renderPlayer(this.x, this.y, this);
         }
     }
 }

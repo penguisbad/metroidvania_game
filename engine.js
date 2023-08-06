@@ -1,3 +1,7 @@
+const random = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 class Entity {
     x;
     y;
@@ -18,6 +22,10 @@ class Entity {
 
         this.previousLocations = [];
         this.originalProperties = {};
+    }
+
+    shakeEffect(intensity, renderFunction) {
+        renderFunction(this.x + random(-intensity, intensity), this.y + random(-intensity, intensity), this);
     }
 
     fadeEffect(red, blue, green, delay, length) {
@@ -168,23 +176,99 @@ class Entity {
 class Particles extends Entity {
 
     direction;
+    amount;
     particleSpeed;
     particleLife;
-    
+    spread;
 
-    constructor(x, y, direction, amount, particleSpeed, particleLife) {
-        super(x, y, 0, 0);
+    particles;
+
+    parentEntity;
+    relativeX;
+    relativeY;
+
+    constructor(x, y, direction, amount, delay, particleSpeed, particleLife, spread, parentEntity = null) {
+        
+        if (parentEntity == null) {
+            super(x, y, 0, 0);
+        } else {
+            super(parentEntity.x + x, parentEntity.y + y);
+            this.relativeX = x;
+            this.relativeY = y;
+            
+        }
+        this.parentEntity = parentEntity;
         this.direction = direction;
+        this.amount = amount;
+        this.delay = delay;
         this.particleSpeed = particleSpeed;
         this.particleLife = particleLife;
+        this.spread = spread;
+        this.particles = [];
 
         this.setOriginalProperties();
     }
 
-    update() {
+    createParticle() {
+        this.particles.push({
+            x: random(-this.spread, this.spread),
+            y: random(-this.spread, this.spread),
+            frameCreated: frameCount
+        });
+    }
 
+    move(dx, dy) {
+        if (this.parentEntity == null) {
+            super.move(dx, dy, true);
+            return;
+        }
+        this.relativeX += dx;
+        this.relativeY += dy;
+    }
+
+    update() {
+        if (this.parentEntity != null) {
+            this.x = this.parentEntity.x + this.relativeX;
+            this.y = this.parentEntity.y + this.relativeY;
+            if (!entities.includes(this.parentEntity)) {
+                this.destroy();
+            }
+        }
+
+        if (frameCount % this.delay == 0) {
+            for (let i = 0; i < this.amount; i++) {
+                this.createParticle();
+            }
+        }
+        
+        this.particles.forEach(particle => {
+            switch (this.direction) {
+                case "right":
+                    particle.x += this.particleSpeed;
+                    break;
+                case "left":
+                    particle.x -= this.particleSpeed;
+                    break;
+                case "down":
+                    particle.y += this.particleSpeed;
+                    break;
+                case "up":
+                    particle.y -= this.particleSpeed;
+                    break;
+                default:
+                    break;
+            }
+        });
+        
+        this.particles = this.particles.filter(particle => particle.frameCreated + this.particleLife > frameCount);
+        
+        
     }
     render() {
-
+        ctx.fillStyle = "black";
+        
+        this.particles.forEach(particle => {
+            ctx.fillRect(this.x + particle.x, this.y + particle.y, 2, 2);
+        });
     }
 }

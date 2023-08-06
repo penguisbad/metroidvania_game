@@ -14,7 +14,8 @@ let keyMap = {
     "ArrowUp": false,
     "z": false,
     "x": false,
-    "c": false
+    "c": false,
+    "a": false,
 };
 
 document.onkeydown = (event) => {
@@ -27,6 +28,7 @@ document.onkeyup = (event) => {
 //player = new Player(1100, 700, 100);
 player = new Player(30, 50, 100);
 entities.push(player);
+
 
 makeLevel();
 
