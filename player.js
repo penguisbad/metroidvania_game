@@ -1,13 +1,11 @@
 class Projectile extends Entity {
 
     direction;
-    frameCreated;
     damage;
 
     constructor(x, y, direction, damage) {
         super(x, y, 7, 7);
         this.direction = direction;
-        this.frameCreated = frameCount;
         this.damage = damage;
     }
     update() {
@@ -56,7 +54,7 @@ class Player extends Entity {
         "z": false,
         "c": false,
         "x": false,
-        "a": false
+        "s": false
     };
 
     isDashing = false;
@@ -190,7 +188,7 @@ class Player extends Entity {
         if (!this.abilities["chargedShot"]) {
             return;
         }
-        if (keyMap["a"] && !this.keysPressedPreviousFrame["a"]) {
+        if (keyMap["s"] && !this.keysPressedPreviousFrame["s"]) {
             if (this.chargedShot) {
                 if (this.directionFacing == "right") {
                     entities.push(new ChargedProjectile(this.x + this.width + 15, this.y + (this.height / 2) - 2, "right", 5));
@@ -206,12 +204,12 @@ class Player extends Entity {
             
         }
         let chargedShotReady = this.startChargingShotFrame + 50 < frameCount;
-        let aKeyReleased = !keyMap["a"] && this.keysPressedPreviousFrame["a"];
-        if (!this.chargedShot && aKeyReleased && chargedShotReady) {
+        let sKeyReleased = !keyMap["s"] && this.keysPressedPreviousFrame["s"];
+        if (!this.chargedShot && sKeyReleased && chargedShotReady) {
             this.chargedShot = true;
             this.startChargingShotFrame = Number.MAX_SAFE_INTEGER;
         }
-        if (aKeyReleased || chargedShotReady) {
+        if (sKeyReleased || chargedShotReady) {
             this.chargingShot = false;
         }
     }

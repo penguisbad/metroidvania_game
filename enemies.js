@@ -1,13 +1,30 @@
-class Enemy extends Entity {
+class PlayerCollisionDamageEntity extends Entity {
+    damage;
+
+    constructor(x, y, width, height, damage) {
+        super(x, y, width, height);
+        this.damage = damage;
+    }
+
+    checkPlayerCollision() {
+        if (this.collidedWith(player)) {
+            player.takeDamage(this.damage);
+        }
+    }
+}
+
+class Enemy extends PlayerCollisionDamageEntity {
 
     maxHealth;
     health;
+    damage;
 
-    constructor(x, y, maxHealth) {
-        super(x, y, 30, 30);
+    constructor(x, y, width, height, maxHealth, damage) {
+        super(x, y, width, height);
 
         this.maxHealth = maxHealth;
         this.health = maxHealth;
+        this.damage = damage;
     }
 
     takeDamage(amount) {
@@ -19,15 +36,11 @@ class Enemy extends Entity {
     gravity() {
         this.move(0, 8);
     }
-    checkPlayerCollision() {
-        if (this.collidedWith(player)) {
-            player.takeDamage(30);
-        }
+    
+    update() {
     }
-
     render() {
 
-        
     }
 }
 
@@ -38,8 +51,8 @@ class BasicEnemy extends Enemy {
     direction;
     paceSpeed;
 
-    constructor(x, y, maxHealth, paceDistance, paceSpeed) {
-        super(x, y, maxHealth, 0);
+    constructor(x, y, maxHealth, paceDistance, paceSpeed, damage) {
+        super(x, y, 30, 30, maxHealth, damage);
         this.paceDistance = paceDistance;
         this.paceSpeed = paceSpeed;
 
@@ -82,6 +95,11 @@ class BasicEnemy extends Enemy {
             ctx.fillRect(this.x + 2, this.y + 10, 3, 3);
             ctx.fillRect(this.x + 9, this.y + 10, 3, 3);
         }
+    }
+}
+class BasicEnemy1 extends BasicEnemy {
+    constructor(x, y, paceDistance) {
+        super(x, y, 10, paceDistance, 3, 30);
     }
 }
 class ChargingEnemy extends BasicEnemy {

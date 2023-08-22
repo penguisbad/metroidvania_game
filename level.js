@@ -139,11 +139,14 @@ const makeLevel = () => {
         });
         levelData[sceneName]["enemies"].forEach(enemy => {
             switch (enemy[0]) {
-                case "basic":
-                    entitiesToAdd.push(new BasicEnemy(enemy[1], enemy[2], enemy[3], enemy[4], enemy[5]));
+                case "basic-1":
+                    entitiesToAdd.push(new BasicEnemy1(enemy[1], enemy[2], enemy[3]));
                     break;
                 case "charging":
                     entitiesToAdd.push(new ChargingEnemy(enemy[1], enemy[2], enemy[3], enemy[4], enemy[5], enemy[6], enemy[7]));
+                    break;
+                case "firstBoss":
+                    entitiesToAdd.push(new FirstBoss(enemy[1], enemy[2], enemy[3]));
                     break;
                 default:
                     break;

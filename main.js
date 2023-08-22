@@ -15,7 +15,7 @@ let keyMap = {
     "z": false,
     "x": false,
     "c": false,
-    "a": false,
+    "s": false,
 };
 
 document.onkeydown = (event) => {

@@ -12,6 +12,8 @@ class Entity {
     originalProperties;
     resetImmune;
 
+    frameCreated;
+
     constructor(x, y, width, height) {
         this.x = x;
         this.y = y;
@@ -19,6 +21,7 @@ class Entity {
         this.height = height;
         this.entityCollidedWith = null;
         this.resetImmune = false;
+        this.frameCreated = frameCount;
 
         this.previousLocations = [];
         this.originalProperties = {};
