@@ -10,10 +10,10 @@ class Projectile extends Entity {
     }
     update() {
         if (this.direction == "right") {
-            this.move(15, 0);
+            this.move(7, 0);
         }
         if (this.direction == "left") {
-            this.move(-15, 0);
+            this.move(-7, 0);
         }
 
         let collisionInformation = this.collidedWithAnything(true);
@@ -36,8 +36,8 @@ class Projectile extends Entity {
 class ChargedProjectile extends Projectile {
     constructor(x, y, direction, damage) {
         super(x, y, direction, damage);
-        this.width = 12;
-        this.height = 12;
+        this.width = 6;
+        this.height = 6;
         entities.push(new Particles(this.width / 2, this.height / 2, this.direction == "right" ? "left": "right", 10, 2, 10, 10, 6, this));
     }
 }
@@ -77,7 +77,7 @@ class Player extends Entity {
     takenDamageFrame = 0;
 
     constructor(x, y, maxHealth) {
-        super(x, y, 30, 30);
+        super(x, y, 15, 15);
         this.health = maxHealth;
         this.maxHealth = maxHealth;
         this.setOriginalProperties();
@@ -87,7 +87,7 @@ class Player extends Entity {
         if (this.isDashing) {
             return;
         }
-        this.move(0, 10);
+        this.move(0, 5);
     }
 
     jump() {
@@ -100,7 +100,7 @@ class Player extends Entity {
     }
     
     startJumping() {
-        this.jumpVelocity = 20;
+        this.jumpVelocity = 10;
         if (!this.abilities["doubleJump"]) {
             return;
         }
@@ -140,9 +140,9 @@ class Player extends Entity {
 
     dash() {
         if (this.directionFacing == "left") {
-            this.move(-10, 0);
+            this.move(-5, 0);
         } else {
-            this.move(10, 0);
+            this.move(5, 0);
         }
     }
 
@@ -170,10 +170,10 @@ class Player extends Entity {
 
     shoot() {
         if (this.directionFacing == "right") {
-            entities.push(new Projectile(this.x + this.width + 10, this.y + (this.height / 2), "right", 1));
+            entities.push(new Projectile(this.x + this.width + 5, this.y + (this.height / 2), "right", 1));
         }
         if (this.directionFacing == "left") {
-            entities.push(new Projectile(this.x - 10, this.y + (this.height / 2), "left", 1));
+            entities.push(new Projectile(this.x - 5, this.y + (this.height / 2), "left", 1));
         }
         
     }
@@ -217,11 +217,11 @@ class Player extends Entity {
     movement() {
         if (keyMap["ArrowRight"]) {
             this.directionFacing = "right";
-            this.move(5, 0);
+            this.move(2, 0);
         }
         if (keyMap["ArrowLeft"]) {
             this.directionFacing = "left";
-            this.move(-5, 0);
+            this.move(-2, 0);
         }
     }
 
@@ -285,11 +285,11 @@ class Player extends Entity {
     renderHUD() {
         ctx.fillStyle = "black";
         ctx.font = "20px Arial";
-        ctx.fillText("HP", 10, 30);
-        ctx.fillRect(50, 20, this.health * 3, 6);
-        ctx.fillRect(50, 22, 300, 2);
-        ctx.fillRect(48, 15, 2, 15);
-        ctx.fillRect(350, 15, 2, 15);
+        ctx.fillText("HP", 5, 15);
+        ctx.fillRect(25, 10, this.health * 3, 3);
+        ctx.fillRect(25, 11, 150, 1);
+        ctx.fillRect(24, 7, 1, 7);
+        ctx.fillRect(175, 7, 1, 7);
     }
 
     renderPlayer(x, y, thisEntity) {
