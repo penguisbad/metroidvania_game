@@ -64,9 +64,6 @@ class Entity {
     }
 
     reset() {
-        if (this.resetImmune) {
-            return;
-        }
         let keys = Object.keys(this);
         keys.forEach(key => {
             if (key != "originalProperties") {
@@ -169,6 +166,10 @@ class Entity {
                 break;
             }
         }
+    }
+
+    gravity() {
+        this.move(0, 10);
     }
 
     destroy() {

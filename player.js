@@ -57,6 +57,8 @@ class Player extends Entity {
         "s": false
     };
 
+    shootFrame = 0;
+
     isDashing = false;
     dashFrameCount = 0;
     allowedToDash = true;
@@ -69,8 +71,8 @@ class Player extends Entity {
     startChargingShotFrame;
 
     abilities = {
-        "dash": true,
-        "doubleJump": true,
+        "dash": false,
+        "doubleJump": false,
         "chargedShot": true,
     }
 
@@ -169,6 +171,10 @@ class Player extends Entity {
     }
 
     shoot() {
+        if (this.shootFrame + 20 > frameCount) {
+            return;
+        }
+        this.shootFrame = frameCount;
         if (this.directionFacing == "right") {
             entities.push(new Projectile(this.x + this.width + 10, this.y + (this.height / 2), "right", 1));
         }
@@ -307,6 +313,7 @@ class Player extends Entity {
     }
 
     render() {
+        this.fadeEffect(0, 0, 0, 3, 5);
         this.renderHUD();
         if (this.chargingShot) {
             this.shakeEffect(2, this.renderPlayer);
