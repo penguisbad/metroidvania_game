@@ -36,11 +36,9 @@ try {
         ctx.fillStyle = "rgb(50, 50, 50)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // make sure player is rendered on the top
-        entities.sort((a, b) => (a instanceof Player) ? 1 : -1);
-        
         entities.forEach(entity => entity.update());
         entities.forEach(entity => entity.render());
+        player.renderHUD();
     }, 10);
 } catch (error) {
     alert(error);

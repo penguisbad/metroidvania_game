@@ -314,8 +314,7 @@ class Player extends Entity {
     }
 
     render() {
-        this.fadeEffect(0, 0, 0, 1, 20);
-        this.renderHUD();
+        this.fadeEffect(0, 0, 0, 3, 5);
         if (this.chargingShot) {
             this.shakeEffect(2, this.renderPlayer);
         } else {

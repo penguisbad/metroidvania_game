@@ -292,7 +292,8 @@ const makeLevel = () => {
         new Platform(0, 300, 100, 20),
         new Platform(100, 150, 100, 20),
         new BasicEnemy1(800, 100, 300),
-        new Gate(1180, 50, 20, 150, "button gate 2")
+        new Gate(1180, 50, 20, 150, "button gate 2"),
+        new ShootingEnemy1(50, 100)
     ]);
 
     let s5_4 = new Scene();
@@ -306,6 +307,10 @@ const makeLevel = () => {
         new Platform(0, 250, 500, 20),
         new Platform(700, 250, 500, 20),
         new Platform(200, 400, 800, 20),
+        new ShootingEnemy1(500, 450),
+        new ShootingEnemy1(680, 450),
+        new BasicEnemy1(100, 150, 300),
+        new BasicEnemy1(700, 150, 400)
     ]);
 
     let s4_4 = new Scene();
@@ -320,7 +325,10 @@ const makeLevel = () => {
         new Platform(100, 50, 20, 400),
         new Platform(200, 150, 500, 20),
         new Platform(100, 300, 500, 20),
-        new Platform(200, 450, 500, 20)
+        new Platform(200, 450, 500, 20),
+        new BasicEnemy1(250, 100, 400),
+        new BasicEnemy1(150, 200, 400),
+        new BasicEnemy1(250, 400, 400)
     ]);
 
     let s3_4 = new Scene();
@@ -460,7 +468,8 @@ const makeLevel = () => {
         new Platform(0, 50, 20, 500),
         new Platform(300, 400, 100, 50),
         new Platform(500, 300, 300, 50),
-        new Platform(900, 200, 300, 100)
+        new Platform(900, 200, 300, 100),
+        new ChargingEnemy1(500, 100, 250)
     ]);
     
     let s6_2 = new Scene();
@@ -488,26 +497,51 @@ const makeLevel = () => {
         new Platform(0, 0, 1200, 50),
         new Platform(0, 550, 1200, 50),
         new Platform(0, 150, 200, 50),
-        new Platform(300, 200, 100, 50)
+        new Platform(400, 200, 100, 50),
+        new Platform(800, 300, 100, 50),
+        new Platform(1100, 250, 100, 50)
     ]);
 
     let s9_2 = new Scene();
     s9_2.addEntities([
         new Platform(0, 0, 1200, 50),
-        new Platform(0, 550, 1200, 50)
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 250, 300, 50),
+        new Platform(500, 300, 700, 100),
+        new BasicEnemy2(500, 200, 550)
     ]);
 
     let s10_2 = new Scene();
     s10_2.addEntities([
         new Platform(0, 0, 1200, 50),
-        new Platform(0, 550, 1200, 50)
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 300, 100, 100),
+        new Platform(100, 200, 50, 50),
+        new Platform(200, 100, 50, 50),
+        new Platform(400, 50, 20, 150),
+        new Platform(500, 300, 300, 50),
+        new Platform(1000, 300, 200, 50)
     ]);
 
     let s11_2 = new Scene();
     s11_2.addEntities([
         new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1100, 50),
+        new Platform(1180, 50, 20, 550),
+        new Platform(0, 300, 200, 50),
+        new Platform(300, 300, 300, 50),
+        new Platform(700, 300, 300, 50),
+        new Platform(1050, 300, 50, 150),
+        new Gate(1050, 450, 20, 100, "+10 hp boss gate 2")
+    ]);
+
+    let s11_3_boss = new Scene();
+    s11_3_boss.addEntities([
+        new Platform(0, 0, 1100, 50),
         new Platform(0, 550, 1200, 50),
-        new Platform(1180, 50, 20, 500)
+        new Platform(0, 50, 20, 500),
+        new Platform(1180, 0, 20, 450),
+        new Gate(1180, 450, 20, 100, "+10 hp boss gate 2")
     ]);
 
     s1_1.setAdjacentScenes(null, null, s2_1, null);
@@ -540,8 +574,9 @@ const makeLevel = () => {
     s8_2.setAdjacentScenes(s7_2, null, s9_2, null);
     s9_2.setAdjacentScenes(s8_2, null, s10_2, null);
     s10_2.setAdjacentScenes(s9_2, null, s11_2, null);
-    s11_2.setAdjacentScenes(s10_2, null, null, null);
+    s11_2.setAdjacentScenes(s10_2, null, null, s11_3_boss);
+    s11_3_boss.setAdjacentScenes(null, s11_2, null, null);
 
-    currentScene = s1_1;
+    currentScene = s5_3;
     currentScene.makeScene();
 }
