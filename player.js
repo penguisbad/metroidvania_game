@@ -66,12 +66,13 @@ class Player extends Entity {
     doubleJump = false;
     allowedToDoubleJump = false;
 
+    projectileDamage = 2;
     chargedShot = false;
     chargingShot = false;
     startChargingShotFrame;
 
     abilities = {
-        "dash": false,
+        "dash": true,
         "doubleJump": false,
         "chargedShot": true,
     }
@@ -137,7 +138,7 @@ class Player extends Entity {
             this.jump();
         } else {
             this.gravity();
-        }
+        }   
     }
 
     dash() {
@@ -176,10 +177,10 @@ class Player extends Entity {
         }
         this.shootFrame = frameCount;
         if (this.directionFacing == "right") {
-            entities.push(new Projectile(this.x + this.width + 10, this.y + (this.height / 2), "right", 1));
+            entities.push(new Projectile(this.x + this.width + 10, this.y + (this.height / 2), "right", this.projectileDamage));
         }
         if (this.directionFacing == "left") {
-            entities.push(new Projectile(this.x - 10, this.y + (this.height / 2), "left", 1));
+            entities.push(new Projectile(this.x - 10, this.y + (this.height / 2), "left", this.projectileDamage));
         }
         
     }
@@ -249,6 +250,10 @@ class Player extends Entity {
             this.y = 0;
         }
     }
+
+    respawn() {
+        this.reset();
+    }
     
     takeDamage(damage) {
         if (this.takenDamageFrame + 20 > frameCount) {
@@ -256,16 +261,13 @@ class Player extends Entity {
         }
         this.health -= damage;
         if (this.health <= 0) {
-            this.reset();
+            this.respawn();
         }
         this.takenDamageFrame = frameCount;
     }
 
-    heal() {
-        if (!(frameCount % 100 == 0)) {
-            return;
-        }
-        this.health += 5;
+    heal(amount) {
+        this.health += amount;
         if (this.health >= this.maxHealth) {
             this.health = this.maxHealth;
         }
@@ -284,7 +286,6 @@ class Player extends Entity {
         this.checkShoot();
         this.checkChargedShot();
         this.updateKeysPressedPreviousFrame();
-        this.heal();
         this.checkSceneTransition();
     }
 
@@ -313,7 +314,7 @@ class Player extends Entity {
     }
 
     render() {
-        this.fadeEffect(0, 0, 0, 3, 5);
+        this.fadeEffect(0, 0, 0, 1, 20);
         this.renderHUD();
         if (this.chargingShot) {
             this.shakeEffect(2, this.renderPlayer);

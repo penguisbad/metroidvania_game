@@ -57,7 +57,7 @@ class Boss extends Enemy {
 
 class FallingPlatform extends PlayerCollisionDamageEntity {
     constructor(x, y, width) {
-        super(x, y, width, 20, 30);
+        super(x, y, width, 20, 10);
     }
 
     update() {
@@ -80,7 +80,7 @@ class FirstBoss extends Boss {
 
 
     constructor(x, y, arenaArea) {
-        super(x, y, 150, 50, 50, arenaArea);
+        super(x, y, 150, 30, 50, arenaArea);
         this.setAttacks({"phase 1": [{
             name: "falling platforms",
             length: 500

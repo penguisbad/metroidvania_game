@@ -30,6 +30,7 @@ class Enemy extends PlayerCollisionDamageEntity {
     takeDamage(amount) {
         this.health -= amount;
         if (this.health <= 0) {
+            player.heal(this.maxHealth);
             this.destroy();
         }
     }
@@ -99,7 +100,7 @@ class BasicEnemy extends Enemy {
 }
 class BasicEnemy1 extends BasicEnemy {
     constructor(x, y, paceDistance) {
-        super(x, y, 10, paceDistance, 3, 30);
+        super(x, y, 10, paceDistance, 2, 10);
     }
 }
 class ChargingEnemy extends BasicEnemy {

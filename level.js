@@ -168,6 +168,8 @@ const makeLevel = () => {
 
 const makeLevel = () => {
 
+    // no movement abilities
+
     let s1_1 = new Scene();
     s1_1.addEntities([
         new Platform(0, 0, 1200, 50),
@@ -249,8 +251,8 @@ const makeLevel = () => {
         new Platform(250, 200, 100, 20)
     ]);
 
-    let s3_3 = new Scene();
-    s3_3.addEntities([
+    let s3_3_boss = new Scene();
+    s3_3_boss.addEntities([
         new Platform(100, 0, 1100, 50),
         new Platform(0, 550, 1200, 50),
         new Platform(0, 0, 20, 550),
@@ -264,7 +266,248 @@ const makeLevel = () => {
         new Platform(0, 0, 1200, 50),
         new Platform(0, 550, 1200, 50),
         new Platform(0, 50, 20, 400),
-        new Platform(1180, 50, 20, 400)
+        new Platform(1180, 50, 20, 400),
+        new Platform(400, 100, 20, 450),
+        new Platform(50, 450, 50, 20),
+        new Platform(250, 350, 50, 20),
+        new Platform(100, 200, 50, 20),
+        new Platform(200, 100, 200, 20),
+        new Platform(500, 50, 20, 400),
+        new Platform(550, 400, 50, 20),
+        new Platform(700, 300, 50, 20),
+        new Platform(900, 200, 50, 20),
+        new Platform(1000, 100, 20, 450)
+    ]);
+
+    let s5_3 = new Scene();
+    s5_3.addEntities([
+        new Platform(0, 0, 100, 50),
+        new Platform(200, 0, 1000, 50),
+        new Platform(0, 50, 20, 400),
+        new Platform(1180, 200, 20, 450),
+        new Platform(0, 550, 300, 50),
+        new Platform(400, 400, 100, 20),
+        new Platform(600, 300, 100, 20),
+        new Platform(800, 200, 400, 20),
+        new Platform(0, 300, 100, 20),
+        new Platform(100, 150, 100, 20),
+        new BasicEnemy1(800, 100, 300),
+        new Gate(1180, 50, 20, 150, "button gate 2")
+    ]);
+
+    let s5_4 = new Scene();
+    s5_4.addEntities([
+        new Platform(0, 50, 20, 350),
+        new Platform(1180, 0, 20, 450),
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 0, 300, 50),
+        new Platform(100, 100, 1000, 20),
+        new Platform(590, 100, 20, 450),
+        new Platform(0, 250, 500, 20),
+        new Platform(700, 250, 500, 20),
+        new Platform(200, 400, 800, 20),
+    ]);
+
+    let s4_4 = new Scene();
+    s4_4.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(1180, 50, 20, 350),
+        new Platform(1000, 400, 50, 20),
+        new Platform(900, 300, 50, 20),
+        new Platform(800, 200, 50, 20),
+        new Platform(700, 150, 20, 400),
+        new Platform(100, 50, 20, 400),
+        new Platform(200, 150, 500, 20),
+        new Platform(100, 300, 500, 20),
+        new Platform(200, 450, 500, 20)
+    ]);
+
+    let s3_4 = new Scene();
+    s3_4.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 50, 20, 500),
+        new Platform(1000, 400, 100, 20),
+        new Platform(500, 300, 400, 100),
+        new Platform(0, 200, 400, 100),
+        new Button(20, 100, 20, 50, "button gate 1")
+    ]);
+
+    let s6_4 = new Scene();
+    s6_4.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 50, 20, 400),
+        new Platform(1180, 150, 20, 400),
+        new Platform(0, 450, 1000, 20),
+        new Gate(100, 470, 20, 80, "button gate 1"),
+        new Platform(800, 300, 100, 20),
+        new Platform(0, 200, 300, 50),
+        new Platform(400, 200, 300, 50),
+        new Button(20, 100, 20, 50, "button gate 2")
+    ]);
+
+    let s6_3 = new Scene();
+    s6_3.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 200, 20, 450),
+        new Platform(50, 400, 50, 20),
+        new Platform(150, 300, 300, 100),
+        new Platform(600, 300, 300, 100),
+        new Platform(1000, 300, 200, 100)
+    ]);
+
+    let s7_3 = new Scene();
+    s7_3.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 300, 100, 100),
+        new Platform(300, 300, 300, 100),
+        new Platform(800, 300, 300, 100)
+    ]);
+
+    let s8_3 = new Scene();
+    s8_3.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 500, 50),
+        new Platform(0, 300, 300, 100),
+        new Platform(450, 200, 50, 350),
+        new Platform(600, 550, 600, 50),
+        new Platform(600, 200, 50, 350),
+        new Platform(1100, 200, 100, 20),
+        new Platform(750, 200, 100, 20),
+        new Platform(650, 350, 50, 20),
+        new Platform(1180, 200, 20, 350)
+    ]);
+
+    let s8_4_boss = new Scene();
+    s8_4_boss.addEntities([
+        new Platform(0, 0, 500, 50),
+        new Platform(600, 0, 600, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 50, 20, 400),
+        new Platform(1180, 50, 20, 500),
+        new Gate(0, 450, 20, 100, "dashBoss gate")
+    ]);
+
+    let s7_4 = new Scene();
+    s7_4.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 150, 20, 400),
+        new Platform(1180, 50, 20, 400),
+        new Platform(0, 250, 100, 20),
+        new Platform(100, 450, 100, 20),
+        new Platform(600, 200, 20, 350),
+        new Platform(600, 200, 500, 20),
+        new Platform(700, 350, 500, 20)
+    ]);
+
+    // dash ability
+
+    let s9_3 = new Scene();
+    s9_3.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1100, 50),
+        new Platform(0, 200, 20, 350),
+        new Platform(1180, 200, 20, 400),
+        new Platform(200, 50, 20, 400),
+        new Platform(150, 350, 150, 20),
+        new Platform(500, 300, 100, 100),
+        new Platform(800, 200, 100, 100),
+        new Platform(1000, 200, 20, 350),
+        new Platform(1100, 400, 100, 20)
+    ]);
+
+    let s9_4_boss = new Scene();
+    s9_4_boss.addEntities([
+        new Platform(0, 0, 1100, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 50, 20, 500),
+        new Platform(1180, 0, 20, 450),
+        new Gate(1180, 450, 20, 100, "+10 hp boss gate 1")
+    ]);
+
+    let s10_4 = new Scene();
+    s10_4.addEntities([
+        new Platform(0, 0, 20, 450),
+        new Platform(1180, 0, 20, 550),
+        new Platform(0, 550, 1200, 50),
+        new Platform(200, 450, 100, 20),
+        new Platform(500, 300, 100, 20),
+        new Platform(900, 250, 100, 20),
+        new Platform(1000, 100, 100, 20)
+    ]);
+
+    let s10_3 = new Scene();
+    s10_3.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 200, 20, 350),
+        new Platform(1180, 50, 20, 550),
+        new Platform(1100, 500, 100, 20),
+        new Platform(800, 350, 100, 20),
+        new Platform(400, 300, 100, 20),
+        new Platform(100, 200, 100, 20)
+    ]);
+
+    let s5_2 = new Scene();
+    s5_2.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 100, 50),
+        new Platform(200, 550, 1000, 50),
+        new Platform(0, 50, 20, 500),
+        new Platform(300, 400, 100, 50),
+        new Platform(500, 300, 300, 50),
+        new Platform(900, 200, 300, 100)
+    ]);
+    
+    let s6_2 = new Scene();
+    s6_2.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 200, 400, 100),
+        new Platform(700, 250, 50, 20),
+        new Platform(1000, 200, 200, 100)
+    ]);
+
+    let s7_2 = new Scene();
+    s7_2.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 200, 100, 100),
+        new Platform(400, 300, 50, 50),
+        new Platform(600, 150, 50, 50),
+        new Platform(900, 300, 50, 50),
+        new Platform(1100, 150, 100, 50)
+    ]);
+
+    let s8_2 = new Scene();
+    s8_2.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(0, 150, 200, 50),
+        new Platform(300, 200, 100, 50)
+    ]);
+
+    let s9_2 = new Scene();
+    s9_2.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50)
+    ]);
+
+    let s10_2 = new Scene();
+    s10_2.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50)
+    ]);
+
+    let s11_2 = new Scene();
+    s11_2.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50),
+        new Platform(1180, 50, 20, 500)
     ]);
 
     s1_1.setAdjacentScenes(null, null, s2_1, null);
@@ -272,10 +515,33 @@ const makeLevel = () => {
     s3_1.setAdjacentScenes(s2_1, null, s4_1, null);
     s4_1.setAdjacentScenes(s3_1, null, null, s4_2);
     s4_2.setAdjacentScenes(s3_2, s4_1, null, null);
-    s3_2.setAdjacentScenes(null, null, s4_2, s3_3);
-    s3_3.setAdjacentScenes(null, s3_2, s4_3, null);
-    s4_3.setAdjacentScenes(s3_3, null, null, null);
+    s3_2.setAdjacentScenes(null, null, s4_2, s3_3_boss);
+    s3_3_boss.setAdjacentScenes(null, s3_2, s4_3, null);
+    s4_3.setAdjacentScenes(s3_3_boss, null, s5_3, null);
+    s5_3.setAdjacentScenes(s4_3, s5_2, s6_3, s5_4);
+    s5_4.setAdjacentScenes(s4_4, s5_3, s6_4, null);
+    s4_4.setAdjacentScenes(s3_4, null, s5_4, null);
+    s3_4.setAdjacentScenes(null, null, s4_4, null);
+    s6_4.setAdjacentScenes(s5_4, null, s7_4, null);
+    s6_3.setAdjacentScenes(s5_3, null, s7_3, null);
+    s7_3.setAdjacentScenes(s6_3, null, s8_3, null);
+    s8_3.setAdjacentScenes(s7_3, null, s9_3, s8_4_boss);
+    s8_4_boss.setAdjacentScenes(s7_4, s8_3, null, null);
+    s7_4.setAdjacentScenes(s6_4, null, s8_4_boss, null);
 
-    currentScene = s3_3;
+    s9_3.setAdjacentScenes(s8_3, null, null, s9_4_boss);
+    s9_4_boss.setAdjacentScenes(null, s9_3, s10_4, null);
+    s10_4.setAdjacentScenes(s9_4_boss, s10_3, null, null);
+    s10_3.setAdjacentScenes(s9_3, null, null, s10_4);
+
+    s5_2.setAdjacentScenes(null, null, s6_2, s5_3);
+    s6_2.setAdjacentScenes(s5_2, null, s7_2, null);
+    s7_2.setAdjacentScenes(s6_2, null, s8_2, null);
+    s8_2.setAdjacentScenes(s7_2, null, s9_2, null);
+    s9_2.setAdjacentScenes(s8_2, null, s10_2, null);
+    s10_2.setAdjacentScenes(s9_2, null, s11_2, null);
+    s11_2.setAdjacentScenes(s10_2, null, null, null);
+
+    currentScene = s1_1;
     currentScene.makeScene();
 }
