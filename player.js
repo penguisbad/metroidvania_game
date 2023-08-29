@@ -72,9 +72,9 @@ class Player extends Entity {
     startChargingShotFrame;
 
     abilities = {
-        "dash": true,
+        "dash": false,
         "doubleJump": false,
-        "chargedShot": true,
+        "chargedShot": false,
     }
 
     takenDamageFrame = 0;
@@ -172,7 +172,7 @@ class Player extends Entity {
     }
 
     shoot() {
-        if (this.shootFrame + 20 > frameCount) {
+        if (this.shootFrame + 10 > frameCount) {
             return;
         }
         this.shootFrame = frameCount;
@@ -253,6 +253,9 @@ class Player extends Entity {
 
     respawn() {
         this.reset();
+        currentScene.deleteScene();
+        startScene.makeScene();
+        currentScene = startScene;
     }
     
     takeDamage(damage) {

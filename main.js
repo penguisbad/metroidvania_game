@@ -3,6 +3,7 @@ const ctx = canvas.getContext("2d");
 
 let entities = [];
 let currentScene;
+let startScene;
 let frameCount = 0;
 let player;
 

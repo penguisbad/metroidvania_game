@@ -10,7 +10,7 @@ class Entity {
 
     previousLocations;
     originalProperties;
-    resetImmune;
+    resetImmuneProperties;
 
     frameCreated;
 
@@ -25,6 +25,7 @@ class Entity {
 
         this.previousLocations = [];
         this.originalProperties = {};
+        this.resetImmuneProperties = [];
     }
 
     shakeEffect(intensity, renderFunction) {
@@ -66,14 +67,14 @@ class Entity {
     reset() {
         let keys = Object.keys(this);
         keys.forEach(key => {
-            if (key != "originalProperties") {
+            if (key != "originalProperties" && !this.resetImmuneProperties.includes(key)) {
                 this[key] = this.originalProperties[key];
             }
         });
     }
 
-    setResetImmune() {
-        this.resetImmune = true;
+    setResetImmuneProperties(properties) {
+        this.resetImmuneProperties = properties;
     }
 
     update() {

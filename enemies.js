@@ -4,7 +4,9 @@ class PlayerCollisionDamageEntity extends Entity {
     constructor(x, y, width, height, damage) {
         super(x, y, width, height);
         this.damage = damage;
+        this.setOriginalProperties();
     }
+    
 
     checkPlayerCollision() {
         if (this.collidedWith(player)) {
@@ -227,7 +229,6 @@ class ShootingEnemy extends Enemy {
 
 class ShootingEnemy1 extends ShootingEnemy {
     constructor(x, y) {
-        super(x, y, 12, 10, 150, 10, 10, 15);
-        
+        super(x, y, 6, 10, 150, 10, 10, 15);
     }
 }

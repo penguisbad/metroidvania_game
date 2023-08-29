@@ -98,9 +98,7 @@ class Scene {
     makeScene() {
         
         this.entities.forEach(entity => {
-            if (!(entity instanceof Boss)) {
-                entity.reset();
-            }
+            entity.reset();
             entities.push(entity);
         });
     }
@@ -339,7 +337,9 @@ const makeLevel = () => {
         new Platform(1000, 400, 100, 20),
         new Platform(500, 300, 400, 100),
         new Platform(0, 200, 400, 100),
-        new Button(20, 100, 20, 50, "button gate 1")
+        new Button(20, 100, 20, 50, "button gate 1"),
+        new ShootingEnemy1(700, 200),
+        new ShootingEnemy1(200, 100)
     ]);
 
     let s6_4 = new Scene();
@@ -372,8 +372,9 @@ const makeLevel = () => {
         new Platform(0, 0, 1200, 50),
         new Platform(0, 550, 1200, 50),
         new Platform(0, 300, 100, 100),
-        new Platform(300, 300, 300, 100),
-        new Platform(800, 300, 300, 100)
+        new Platform(200, 300, 300, 100),
+        new Platform(600, 300, 300, 100),
+        new Platform(1000, 300, 300, 100)
     ]);
 
     let s8_3 = new Scene();
@@ -397,7 +398,8 @@ const makeLevel = () => {
         new Platform(0, 550, 1200, 50),
         new Platform(0, 50, 20, 400),
         new Platform(1180, 50, 20, 500),
-        new Gate(0, 450, 20, 100, "dashBoss gate")
+        new Gate(0, 450, 20, 100, "dashBoss gate"),
+        new DashBoss(500, 500, {x: 20, y: 50, width: 1160, height: 500})
     ]);
 
     let s7_4 = new Scene();
@@ -577,6 +579,7 @@ const makeLevel = () => {
     s11_2.setAdjacentScenes(s10_2, null, null, s11_3_boss);
     s11_3_boss.setAdjacentScenes(null, s11_2, null, null);
 
-    currentScene = s5_3;
+    startScene = s1_1;
+    currentScene = s1_1;
     currentScene.makeScene();
 }
