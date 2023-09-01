@@ -203,6 +203,10 @@ class Bomb extends PlayerCollisionDamageEntity {
             this.destroy();
         }
     }
+    
+    gravity() {
+        this.move(0, 5);
+    }
 
     render() {
         ctx.fillStyle = "black";
@@ -516,7 +520,7 @@ class Plus10HPBoss1 extends Boss {
                 this.flyUp();
                 break;
             case "faster follow":
-                this.follow(10);
+                this.follow(20);
                 break;
             case "stomp":
                 this.stomp();
@@ -530,6 +534,6 @@ class Plus10HPBoss1 extends Boss {
     destroy() {
         gates["+10 hp boss gate 1"] = false;
         player.maxHealth += 10;
-        this.isDefeated = true;
+        super.destroy();
     }
 }

@@ -4,7 +4,7 @@ class Projectile extends Entity {
     damage;
 
     constructor(x, y, direction, damage) {
-        super(x, y, 7, 7);
+        super(x, y, 10, 10);
         this.direction = direction;
         this.damage = damage;
     }
@@ -53,11 +53,8 @@ class Player extends Entity {
     keysPressedPreviousFrame = {
         "z": false,
         "c": false,
-        "x": false,
         "s": false
     };
-
-    shootFrame = 0;
 
     isDashing = false;
     dashFrameCount = 0;
@@ -172,10 +169,6 @@ class Player extends Entity {
     }
 
     shoot() {
-        if (this.shootFrame + 10 > frameCount) {
-            return;
-        }
-        this.shootFrame = frameCount;
         if (this.directionFacing == "right") {
             entities.push(new Projectile(this.x + this.width + 10, this.y + (this.height / 2), "right", this.projectileDamage));
         }
@@ -186,7 +179,7 @@ class Player extends Entity {
     }
 
     checkShoot() {
-        if (keyMap["x"] && !this.keysPressedPreviousFrame["x"]) {
+        if (keyMap["x"] && frameCount % 20 == 0) {
             this.shoot();
         }
     }
