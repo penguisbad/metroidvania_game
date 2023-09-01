@@ -73,6 +73,15 @@ class Boss extends Enemy {
         let projY = this.y + ((this.height - projectileSize) / 2);
         entities.push(new EnemyProjectile(projX, projY, projectileSize, projectileDamage, direction, projectileSpeed));
     }
+
+    getCurrentAttack() {
+        return this.attacks[this.phase][this.attackIndex].name;
+    }
+
+    render() {
+        ctx.fillStyle = "black";
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
 }
 
 class FallingPlatform extends PlayerCollisionDamageEntity {
@@ -137,7 +146,7 @@ class FirstBoss extends Boss {
         if (this.health < 70) {
             this.changePhase("phase 2");
         }
-        switch (this.attacks[this.phase][this.attackIndex].name) {
+        switch (this.getCurrentAttack()) {
             case "falling platforms":
                 this.fallingPlatformsAttack();
                 break;
@@ -153,12 +162,6 @@ class FirstBoss extends Boss {
         }
     }
 
-    
-    render() {
-        ctx.fillStyle = "black";
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-
     destroy() {
         gates["firstBoss gate"] = false;
         super.destroy();
@@ -171,12 +174,14 @@ class Bomb extends PlayerCollisionDamageEntity {
     sizeIncrement;
     delay;
     frameCreated;
+    expanding;
 
     constructor(x, y, startSize, endSize, sizeIncrement, damage) {
         super(x, y, startSize, startSize, damage);
         this.endSize = endSize;
         this.sizeIncrement = sizeIncrement;
         this.frameCreated = frameCount;
+        this.expanding = false;
         this.setOriginalProperties();
     }
 
@@ -185,6 +190,9 @@ class Bomb extends PlayerCollisionDamageEntity {
         this.checkPlayerCollision();
 
         if (this.collidedWithAnything()) {
+            this.expanding = true;
+        }
+        if (this.expanding) {
             this.x -= this.sizeIncrement / 2;
             this.y -= this.sizeIncrement / 2;
             this.width += this.sizeIncrement;
@@ -350,7 +358,7 @@ class DashBoss extends Boss {
         if (this.phase == "phase 2" && this.health < 70) {
             this.changePhase("phase 3");
         }
-        switch (this.attacks[this.phase][this.attackIndex].name) {
+        switch (this.getCurrentAttack()) {
             case "follow + shoot":
                 this.follow(1);
                 if (frameCount % 250 == 0) {
@@ -399,5 +407,129 @@ class DashBoss extends Boss {
         gates["dashBoss gate"] = false;
         player.abilities["dash"] = true;
         super.destroy();
+    }
+}
+class Plus10HPBoss1 extends Boss {
+
+    allowedToSummonBombs;
+    deactivateGravity;
+
+    constructor(x, y, arenaArea) {
+        super(x, y, 200, 20, 50, arenaArea);
+        this.setAttacks({
+            "phase 1": [{
+                name: "follow",
+                length: 200
+            },
+            {
+                name: "summon bombs",
+                length: 1
+            },
+            {
+                name: "follow",
+                length: 200
+            },
+            {
+                name: "summon bombs",
+                length: 1
+            },
+            {
+                name: "follow",
+                length: 200
+            },
+            {
+                name: "fly up",
+                length: 100,
+            },
+            {
+                name: "faster follow",
+                length: 100
+            },
+            {
+                name: "stomp",
+                length: 30
+            },
+            {
+                name: "fly up",
+                length: 100
+            },
+            {
+                name: "faster follow",
+                length: 100
+            },
+            {
+                name: "stomp",
+                length: 30
+            }]
+        });
+        this.allowedToSummonBombs = true;
+        this.deactivateGravity = false;
+        this.setOriginalProperties();
+    }
+
+    gravity() {
+        if (this.deactivateGravity) {
+            return;
+        }
+        super.gravity();
+    }
+
+    summonBombs(amount) {
+        if (!this.allowedToSummonBombs) {
+            return;
+        }
+        for (let i = 0; i < amount; i++) {
+            let xPosition = random(this.arenaArea.x, this.arenaArea.x + this.arenaArea.width);
+            entities.push(new Bomb(xPosition, this.arenaArea.y + 10, 10, 25, 1, 10));
+        }
+        this.allowedToSummonBombs = false;
+    }
+
+    flyUp() {
+        if (this.y < this.arenaArea.y + 100) {
+            return;
+        }
+        this.deactivateGravity = true;
+        this.move(0, -10);
+    }
+
+    stomp() {
+        this.move(0, 20);
+    }
+
+    update() {
+        if (this.isDefeated) {
+            return;
+        }
+        super.update();
+        switch (this.getCurrentAttack()) {
+            case "follow":
+                this.allowedToSummonBombs = true;
+                this.deactivateGravity = false;
+                this.follow(1);
+                break;
+            case "summon bombs":
+                this.follow(1);
+                this.summonBombs(5);
+                break;
+            case "fly up":
+                this.flyUp();
+                break;
+            case "faster follow":
+                this.follow(10);
+                break;
+            case "stomp":
+                this.stomp();
+                this.follow(5);
+                break;
+            default:
+                break;
+        }
+    }
+
+    destroy() {
+        gates["+10 hp boss gate 1"] = false;
+        player.maxHealth += 10;
+        this.isDefeated = true;
     }
 }

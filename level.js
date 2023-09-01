@@ -381,7 +381,7 @@ const makeLevel = () => {
     s8_3.addEntities([
         new Platform(0, 0, 1200, 50),
         new Platform(0, 550, 500, 50),
-        new Platform(0, 300, 300, 100),
+        new Platform(0, 300, 350, 100),
         new Platform(450, 200, 50, 350),
         new Platform(600, 550, 600, 50),
         new Platform(600, 200, 50, 350),
@@ -437,7 +437,8 @@ const makeLevel = () => {
         new Platform(0, 550, 1200, 50),
         new Platform(0, 50, 20, 500),
         new Platform(1180, 0, 20, 450),
-        new Gate(1180, 450, 20, 100, "+10 hp boss gate 1")
+        new Gate(1180, 450, 20, 100, "+10 hp boss gate 1"),
+        new Plus10HPBoss1(500, 500, {x: 20, y: 50, width: 1160, height: 500})
     ]);
 
     let s10_4 = new Scene();
@@ -579,7 +580,7 @@ const makeLevel = () => {
     s11_2.setAdjacentScenes(s10_2, null, null, s11_3_boss);
     s11_3_boss.setAdjacentScenes(null, s11_2, null, null);
 
-    startScene = s1_1;
-    currentScene = s1_1;
+    startScene = s9_3;
+    currentScene = s9_3;
     currentScene.makeScene();
 }

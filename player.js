@@ -72,7 +72,7 @@ class Player extends Entity {
     startChargingShotFrame;
 
     abilities = {
-        "dash": false,
+        "dash": true,
         "doubleJump": false,
         "chargedShot": false,
     }
@@ -259,7 +259,7 @@ class Player extends Entity {
     }
     
     takeDamage(damage) {
-        if (this.takenDamageFrame + 20 > frameCount) {
+        if (this.takenDamageFrame + 50 > frameCount) {
             return;
         }
         this.health -= damage;
