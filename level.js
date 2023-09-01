@@ -242,7 +242,9 @@ const makeLevel = () => {
         new Platform(0, 0, 1200, 50),
         new Platform(100, 550, 1100, 50),
         new Platform(0, 50, 20, 550),
-        new Platform(100, 150, 50, 400),
+        new Platform(100, 150, 50, 300),
+        new Gate(100, 450, 50, 100, "parkour gate 1"),
+        new Button(110, 140, 30, 10, "parkour gate 1"),
         new Platform(1100, 200, 100, 20),
         new Platform(800, 300, 100, 20),
         new Platform(500, 300, 100, 20),
@@ -536,7 +538,8 @@ const makeLevel = () => {
         new Platform(300, 300, 300, 50),
         new Platform(700, 300, 300, 50),
         new Platform(1050, 300, 50, 150),
-        new Gate(1050, 450, 20, 100, "+10 hp boss gate 2")
+        new Button(1060, 290, 30, 10, "parkour gate 2"),
+        new Gate(1050, 450, 20, 100, "parkour gate 2")
     ]);
 
     let s11_3_boss = new Scene();
@@ -545,7 +548,11 @@ const makeLevel = () => {
         new Platform(0, 550, 1200, 50),
         new Platform(0, 50, 20, 500),
         new Platform(1180, 0, 20, 450),
-        new Gate(1180, 450, 20, 100, "+10 hp boss gate 2")
+        new Platform(200, 400, 300, 20),
+        new Platform(700, 400, 300, 20),
+        new Platform(450, 250, 300, 20),
+        new Gate(1180, 450, 20, 100, "+10 hp boss gate 2"),
+        new ChargedShotBoss(100, 500, {x: 20, y: 50, width: 1160, height: 500})
     ]);
 
     s1_1.setAdjacentScenes(null, null, s2_1, null);
@@ -581,7 +588,7 @@ const makeLevel = () => {
     s11_2.setAdjacentScenes(s10_2, null, null, s11_3_boss);
     s11_3_boss.setAdjacentScenes(null, s11_2, null, null);
 
-    startScene = s9_3;
-    currentScene = s9_3;
+    startScene = s11_2;
+    currentScene = s11_2;
     currentScene.makeScene();
 }

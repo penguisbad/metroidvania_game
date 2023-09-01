@@ -184,6 +184,35 @@ class EnemyProjectile extends PlayerCollisionDamageEntity {
     }
 }
 
+class HomingProjectile extends PlayerCollisionDamageEntity {
+    speed;
+    
+    constructor(x, y, size, damage, speed) {
+        super(x, y, size, size, damage);
+        this.speed = speed;
+    }
+
+    update() {
+        if (player.x > this.x) {
+            this.move(this.speed, 0);
+        }
+        if (player.x < this.x) {
+            this.move(-this.speed, 0);
+        }
+        if (player.y > this.y) {
+            this.move(0, this.speed);
+        }
+        if (player.y < this.y) {
+            this.move(0, -this.speed);
+        }
+        this.checkPlayerCollision();
+        let collisionInformation = this.collidedWithAnything(true);
+        if ((collisionInformation[0] && !(collisionInformation[1] instanceof Projectile))) {
+            this.destroy();
+        }
+    }
+}
+
 class ShootingEnemy extends Enemy {
 
     direction;

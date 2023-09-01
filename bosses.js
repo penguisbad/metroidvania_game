@@ -537,3 +537,156 @@ class Plus10HPBoss1 extends Boss {
         super.destroy();
     }
 }
+
+class Lava extends PlayerCollisionDamageEntity {
+
+    endWidth;
+    widthIncrement;
+
+    constructor(x, y, startWidth, endWidth, widthIncrement, height, damage) {
+        super(x, y, startWidth, height, damage);
+        this.endWidth = endWidth;
+        this.widthIncrement = widthIncrement;
+        this.setOriginalProperties();
+    }
+
+    update() {
+        this.checkPlayerCollision();
+        if (this.width < this.endWidth) {
+            this.x -= this.widthIncrement / 2;
+            this.width += this.widthIncrement;
+        }
+    }
+}
+
+class ChargedShotBoss extends Boss {
+
+    deactivateGravity;
+    lavaFloorCreated;
+
+    constructor(x, y, arenaArea) {
+        super(x, y, 300, 20, 50, arenaArea);
+        this.setAttacks({
+            "phase 1": this.createAttackCycle(1),
+            "transition": [{name: "lava floor", length: 1}],
+            "phase 2": this.createAttackCycle(2)});
+        this.deactivateGravity = false;
+        this.lavaFloorCreated = false;
+        this.setOriginalProperties();
+    }
+
+    createAttackCycle(phase) {
+        let attackCycle = [];
+        let r;
+        let previousR = -1;
+        let movement = ["move to right", "move to left", "move to middle", "move to top", "move to bottom"];
+        if (phase == 2) {
+            attackCycle.push({
+                name: "move to middle",
+                length: 50
+            })
+        }
+        for (let i = 0; i < 20; i++) {
+            do {
+                if (phase == 2) {
+                    r = random(0, movement.length - 1);
+                } else {
+                    r = random(0, movement.length - 1);
+                }
+                
+            } while (previousR == r)
+            previousR = r;
+            let l = (r == 0 || r == 1) ? 100 : 50;
+            attackCycle.push({
+                name: movement[r],
+                length: l
+            });
+            attackCycle.push({
+                name: "shoot",
+                length: 200
+            })
+        }
+        return attackCycle;
+    }
+    
+    gravity() {
+        if (this.deactivateGravity) {
+            return;
+        }
+        super.gravity();
+    }
+
+    createLavaFloor() {
+        if (this.lavaFloorCreated) {
+            return;
+        }
+        let lavaX = this.arenaArea.x + (this.arenaArea.width / 2);
+        let lavaY = this.arenaArea.y + this.arenaArea.height - 10;
+        entities.push(new Lava(lavaX, lavaY, 0, this.arenaArea.width, 2, 10, 30));
+        this.lavaFloorCreated = true;
+    }
+
+    moveToLevel(level) {
+        if (level == "bottom") {
+            this.deactivateGravity = false;
+            return;
+        }
+        this.deactivateGravity = true;
+        if (level == "middle" && this.y + this.height < 400) {
+            return;
+        }
+        if (level == "top" && this.y + this.height < 250) {
+            return;
+        }
+        this.move(0, -10);
+    }
+
+    moveToSide(side) {
+        if (side == "right" && !(this.x + this.width > 1100)) {
+            this.move(10, 0);
+        }
+        if (side == "left" && !(this.x < 100)) {
+            this.move(-10, 0);
+        }
+    }
+
+    update() {
+        if (this.isDefeated) {
+            return;
+        }
+        super.update();
+        if (this.phase == "phase 1") {
+            this.changePhase("transition");
+        }
+        if (this.phase == "transition" && this.lavaFloorCreated) {
+            this.changePhase("phase 2");
+        }
+        switch (this.getCurrentAttack()) {
+            case "shoot":
+                if (frameCount % 70 == 0) {
+                    this.shoot(20, 10, 10);
+                }
+                break;
+            case "move to right":
+                this.moveToSide("right");
+                break;
+            case "move to left":
+                this.moveToSide("left");
+                break;
+            case "move to middle":
+                this.moveToLevel("middle");
+                break;
+            case "move to top":
+                this.moveToLevel("top");
+                break;
+            case "move to bottom":
+                this.moveToLevel("bottom");
+                break;
+            case "lava floor":
+                this.createLavaFloor();
+                break;
+            default:
+                break;
+        }
+    }
+}
