@@ -563,15 +563,37 @@ class ChargedShotBoss extends Boss {
 
     deactivateGravity;
     lavaFloorCreated;
+    lavaPlatformsCreated;
+    transition1Complete;
+    transition2Complete;
 
     constructor(x, y, arenaArea) {
         super(x, y, 300, 20, 50, arenaArea);
         this.setAttacks({
             "phase 1": this.createAttackCycle(1),
-            "transition": [{name: "lava floor", length: 1}],
-            "phase 2": this.createAttackCycle(2)});
+            "transition 1": [
+                {name: "lava floor", length: 1},
+                {name: "move to middle", length: 50},
+                {name: "transition 1 complete", length: 1}
+            ],
+            "phase 2": this.createAttackCycle(2),
+            "transition 2": [
+                {name: "lava platforms", length: 1},
+                {name: "move to top", length: 50},
+                {name: "transition 2 complete", length: 1}
+            ],
+            "phase 3": [
+                {name: "move to right", length: 100},
+                {name: "shoot", length: 200},
+                {name: "move to left", length: 100},
+                {name: "shoot", length: 200}
+            ]
+        });
         this.deactivateGravity = false;
         this.lavaFloorCreated = false;
+        this.lavaPlatformsCreated = false;
+        this.transition1Complete = false;
+        this.transition2Complete = false;
         this.setOriginalProperties();
     }
 
@@ -580,20 +602,13 @@ class ChargedShotBoss extends Boss {
         let r;
         let previousR = -1;
         let movement = ["move to right", "move to left", "move to middle", "move to top", "move to bottom"];
-        if (phase == 2) {
-            attackCycle.push({
-                name: "move to middle",
-                length: 50
-            })
-        }
         for (let i = 0; i < 20; i++) {
             do {
                 if (phase == 2) {
-                    r = random(0, movement.length - 1);
+                    r = random(0, movement.length - 2);
                 } else {
                     r = random(0, movement.length - 1);
                 }
-                
             } while (previousR == r)
             previousR = r;
             let l = (r == 0 || r == 1) ? 100 : 50;
@@ -626,28 +641,49 @@ class ChargedShotBoss extends Boss {
         this.lavaFloorCreated = true;
     }
 
+    createLavaPlatforms() {
+        if (this.lavaPlatformsCreated) {
+            return;
+        }
+        entities.push(new Lava(350, 390, 0, 300, 1, 10, 30));
+        entities.push(new Lava(850, 390, 0, 300, 1, 10, 30));
+        this.lavaPlatformsCreated = true;
+    }
+
     moveToLevel(level) {
         if (level == "bottom") {
             this.deactivateGravity = false;
             return;
         }
         this.deactivateGravity = true;
-        if (level == "middle" && this.y + this.height < 400) {
-            return;
+        if (level == "middle") {
+            if (this.y + this.height < 400) {
+                this.move(0, 10, true);
+            }
+            if (this.y + this.height > 400) {
+                this.move(0, -10, true);
+            }
         }
-        if (level == "top" && this.y + this.height < 250) {
-            return;
+        if (level == "top" && this.y + this.height > 250) {
+            this.move(0, -10, true);
         }
-        this.move(0, -10);
+        
     }
 
     moveToSide(side) {
         if (side == "right" && !(this.x + this.width > 1100)) {
-            this.move(10, 0);
+            this.move(10, 0, true);
         }
         if (side == "left" && !(this.x < 100)) {
-            this.move(-10, 0);
+            this.move(-10, 0, true);
         }
+    }
+
+    shootHomingProjectile() {
+        entities.push(new HomingProjectile(this.x, this.y - 50, 20, 10, 2, 300));
+    }
+    shootBouncyProjectile() {
+        entities.push(new BouncyProjectile(this.x, this.y - 50, 20, 10, 2, 1000));
     }
 
     update() {
@@ -655,17 +691,32 @@ class ChargedShotBoss extends Boss {
             return;
         }
         super.update();
-        if (this.phase == "phase 1") {
-            this.changePhase("transition");
+        if (this.phase == "phase 1" && this.health < 200) {
+            this.changePhase("transition 1");
         }
-        if (this.phase == "transition" && this.lavaFloorCreated) {
+        if (this.phase == "transition 1" && this.transition1Complete) {
             this.changePhase("phase 2");
+        }
+        if (this.phase == "phase 2" && this.health < 100) {
+            this.changePhase("transition 2");
+        }
+        if (this.phase == "transition 2" && this.transition2Complete) {
+            this.changePhase("phase 3");
         }
         switch (this.getCurrentAttack()) {
             case "shoot":
-                if (frameCount % 70 == 0) {
+                if (frameCount % 100 == 0) {
                     this.shoot(20, 10, 10);
                 }
+                /*
+                if (frameCount % 500 == 0 && this.phase == "phase 2") {
+                    this.shootHomingProjectile();
+                }
+                */
+                if (frameCount % 300 == 0 && (this.phase == "phase 3" || this.phase == "phase 2")) {
+                    this.shootBouncyProjectile();
+                }
+                
                 break;
             case "move to right":
                 this.moveToSide("right");
@@ -685,8 +736,24 @@ class ChargedShotBoss extends Boss {
             case "lava floor":
                 this.createLavaFloor();
                 break;
+            case "lava platforms":
+                this.createLavaPlatforms();
+                break;
+            case "transition 1 complete":
+                this.transition1Complete = true;
+                break;
+            case "transition 2 complete":
+                this.transition2Complete = true;
+                break;
             default:
                 break;
         }
+    }
+
+    destroy() {
+        player.abilities["chargedShot"] = true;
+        gates["chargedShot boss gate"] = false;
+        entities = entities.filter(entity => !(entity instanceof Lava));
+        super.destroy();
     }
 }

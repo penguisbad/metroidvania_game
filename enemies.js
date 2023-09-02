@@ -186,29 +186,104 @@ class EnemyProjectile extends PlayerCollisionDamageEntity {
 
 class HomingProjectile extends PlayerCollisionDamageEntity {
     speed;
-    
-    constructor(x, y, size, damage, speed) {
+    frameCreated;
+    life;
+
+    constructor(x, y, size, damage, speed, life) {
         super(x, y, size, size, damage);
         this.speed = speed;
+        this.life = life;
+        this.frameCreated = frameCount;
+        this.setOriginalProperties();
     }
 
     update() {
         if (player.x > this.x) {
-            this.move(this.speed, 0);
+            this.move(this.speed, 0, true);
         }
         if (player.x < this.x) {
-            this.move(-this.speed, 0);
+            this.move(-this.speed, 0, true);
         }
         if (player.y > this.y) {
-            this.move(0, this.speed);
+            this.move(0, this.speed/2, true);
         }
         if (player.y < this.y) {
-            this.move(0, -this.speed);
+            this.move(0, -this.speed/2, true);
         }
         this.checkPlayerCollision();
         let collisionInformation = this.collidedWithAnything(true);
-        if ((collisionInformation[0] && !(collisionInformation[1] instanceof Projectile))) {
+        if (this.frameCreated + this.life < frameCount || (collisionInformation[0] && collisionInformation[1] instanceof Player)) {
             this.destroy();
+        }
+    }
+}
+
+class BouncyProjectile extends PlayerCollisionDamageEntity {
+
+    speed;
+    life;
+    frameCreated;
+    horizontalDirection;
+    verticalDirection;
+
+    constructor(x, y, size, damage, speed, life) {
+        super(x, y, size, size, damage);
+        this.speed = speed;
+        this.life = life;
+        this.horizontalDirection = (["right", "left"])[random(0, 1)];
+        this.verticalDirection = (["up", "down"])[random(0, 1)];
+        this.frameCreated = frameCount;
+        this.setOriginalProperties();
+    }
+
+    collidedWithSide(side) {
+        switch (side) {
+            case "up":
+                return (new Entity(this.x + 1, this.y - 2, this.width - 2, 1)).collidedWithAnything();
+                break;
+            case "down":
+                return (new Entity(this.x + 1, this.y + this.height + 1, this.width - 2, 1)).collidedWithAnything();
+                break;
+            case "left":
+                return (new Entity(this.x - 2, this.y + 1, 1, this.height - 2)).collidedWithAnything();
+                break;
+            case "right":
+                return (new Entity(this.x + this.width + 1, this.y + 1, 1, this.height - 2)).collidedWithAnything();
+                break;
+            default:
+                return null;
+                break;
+        }
+    }
+
+    update() {
+        if (this.horizontalDirection == "right") {
+            this.move(this.speed, 0);
+        } else {
+            this.move(-this.speed, 0);
+        }
+
+        if (this.verticalDirection == "down") {
+            this.move(0, this.speed);
+        } else {
+            this.move(0, -this.speed);
+        }
+
+        this.checkPlayerCollision();
+        let collisionInformation = this.collidedWithAnything(true);
+        if (this.frameCreated + this.life < frameCount || (collisionInformation[0] && collisionInformation[1] instanceof Player)) {
+            this.destroy();
+        }
+        
+        if (this.collidedWithSide("right")) {
+            this.horizontalDirection = "left";
+        } else if (this.collidedWithSide("left")) {
+            this.horizontalDirection = "right";
+        }
+        if (this.collidedWithSide("up")) {
+            this.verticalDirection = "down";
+        } else if (this.collidedWithSide("down")) {
+            this.verticalDirection = "up";
         }
     }
 }

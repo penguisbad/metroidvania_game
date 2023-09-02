@@ -10,10 +10,10 @@ class Projectile extends Entity {
     }
     update() {
         if (this.direction == "right") {
-            this.move(15, 0);
+            this.move(15, 0, true);
         }
         if (this.direction == "left") {
-            this.move(-15, 0);
+            this.move(-15, 0, true);
         }
 
         let collisionInformation = this.collidedWithAnything(true);
@@ -21,7 +21,9 @@ class Projectile extends Entity {
             if (collisionInformation[1] instanceof Enemy) {
                 collisionInformation[1].takeDamage(this.damage);
             }
-            this.destroy();
+            if (!(collisionInformation[1] instanceof EnemyProjectile || collisionInformation[1] instanceof HomingProjectile)) {
+                this.destroy();
+            }
         }
         
         

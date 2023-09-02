@@ -103,7 +103,7 @@ class Scene {
         });
     }
     deleteScene() {
-        entities = entities.filter(entity => !(entity instanceof Platform || entity instanceof Enemy));
+        entities = entities.filter(entity => !(entity instanceof Platform || entity instanceof Enemy || entity instanceof PlayerCollisionDamageEntity));
     }
 
     transitionTo(direction) {
@@ -468,13 +468,16 @@ const makeLevel = () => {
 
     let s5_2 = new Scene();
     s5_2.addEntities([
-        new Platform(0, 0, 1200, 50),
+        new Platform(0, 0, 200, 50),
+        new Platform(300, 0, 900, 50),
         new Platform(0, 550, 100, 50),
         new Platform(200, 550, 1000, 50),
         new Platform(0, 50, 20, 500),
         new Platform(300, 400, 100, 50),
         new Platform(500, 300, 300, 50),
         new Platform(900, 200, 300, 100),
+        new Platform(100, 300, 100, 20),
+        new Platform(200, 150, 100, 20),    
         new ChargingEnemy1(500, 100, 250)
     ]);
     
@@ -551,8 +554,25 @@ const makeLevel = () => {
         new Platform(200, 400, 300, 20),
         new Platform(700, 400, 300, 20),
         new Platform(450, 250, 300, 20),
-        new Gate(1180, 450, 20, 100, "+10 hp boss gate 2"),
+        new Gate(1180, 450, 20, 100, "chargedShot boss gate"),
         new ChargedShotBoss(100, 500, {x: 20, y: 50, width: 1160, height: 500})
+    ]);
+
+    let s5_1 = new Scene();
+    s5_1.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 200, 50),
+        new Platform(300, 550, 900, 50),
+        new Platform(0, 50, 20, 500),
+        new Platform(1180, 50, 20, 500),
+        new Platform(600, 200, 20, 350),
+        new Platform()
+    ]);
+
+    let s12_3 = new Scene();
+    s12_3.addEntities([
+        new Platform(0, 0, 1200, 50),
+        new Platform(0, 550, 1200, 50)
     ]);
 
     s1_1.setAdjacentScenes(null, null, s2_1, null);
@@ -579,16 +599,19 @@ const makeLevel = () => {
     s10_4.setAdjacentScenes(s9_4_boss, s10_3, null, null);
     s10_3.setAdjacentScenes(s9_3, null, null, s10_4);
 
-    s5_2.setAdjacentScenes(null, null, s6_2, s5_3);
+    s5_2.setAdjacentScenes(null, s5_1, s6_2, s5_3);
     s6_2.setAdjacentScenes(s5_2, null, s7_2, null);
     s7_2.setAdjacentScenes(s6_2, null, s8_2, null);
     s8_2.setAdjacentScenes(s7_2, null, s9_2, null);
     s9_2.setAdjacentScenes(s8_2, null, s10_2, null);
     s10_2.setAdjacentScenes(s9_2, null, s11_2, null);
     s11_2.setAdjacentScenes(s10_2, null, null, s11_3_boss);
-    s11_3_boss.setAdjacentScenes(null, s11_2, null, null);
+    s11_3_boss.setAdjacentScenes(null, s11_2, s12_3, null);
+    s12_3.setAdjacentScenes(s11_3_boss, null, null, null);
 
-    startScene = s11_2;
-    currentScene = s11_2;
+    s5_1.setAdjacentScenes(null, null, null, s5_2);
+
+    startScene = s1_1;
+    currentScene = s1_1;
     currentScene.makeScene();
 }
